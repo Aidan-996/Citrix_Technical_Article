@@ -221,6 +221,73 @@ Get-ConfigSite
 Finish to check activation from Citrix Licensing Service (Web), license valid: True
 ```
 
+### 6.5 NetScaler 迁移前后对比截图
+
+以下展示 NetScaler 在不同版本、不同许可模式下的实际截图，帮助管理员直观确认迁移状态。
+
+#### 迁移前：Local 模式（基于文件的许可证）
+
+注意 CLI 输出中 `Licensing mode: Local` 以及 `Days to LAS enforcement` 倒计时字段，表示距离强制迁移的剩余天数。GUI 页面顶部显示红色警告横幅 **"Transition to License Activation Service by April 15"**。
+
+**NetScaler 13.1 — Local 模式**
+
+CLI 输出（`show ns license` / `show version`）：License Type: Platinum License，Licensing mode: Local，Days to LAS enforcement: 1214，版本 NS13.1 Build 62.23.nc
+
+![NetScaler 13.1 CLI — Local 模式](images/adc-001.png)
+
+GUI 界面（System > Licenses > ADC License）：
+
+![NetScaler 13.1 GUI — Local 模式](images/adc-002.png)
+
+**NetScaler 14.1 — Local 模式**
+
+CLI 输出：License Type: Platinum License，Licensing mode: Local，Days to LAS enforcement: 1214，版本 NS14.1 Build 66.59.nc
+
+![NetScaler 14.1 CLI — Local 模式](images/adc-003.png)
+
+GUI 界面：
+
+![NetScaler 14.1 GUI — Local 模式](images/adc-004.png)
+
+---
+
+#### 迁移后：LAS (Fixed Bandwidth) 模式
+
+注意 CLI 输出中 `Licensing mode: LAS (Fixed Bandwidth)`，且不再显示 `Days to LAS enforcement` 字段，表示迁移已完成。
+
+**NetScaler 14.1 — LAS 模式**
+
+CLI 输出：License Type: Platinum License，Licensing mode: LAS (Fixed Bandwidth)，Days to expiration: 2823，版本 NS14.1 Build 66.59.nc
+
+![NetScaler 14.1 CLI — LAS 模式](images/adc-005.png)
+
+GUI 界面（Licensing Mode 显示为 LAS (Fixed Bandwidth)）：
+
+![NetScaler 14.1 GUI — LAS 模式](images/adc-006.png)
+
+**NetScaler 13.1 — LAS 模式**
+
+CLI 输出：License Type: Platinum License，Licensing mode: LAS (Fixed Bandwidth)，Days to expiration: 1362，版本 NS13.1 Build 62.23.nc
+
+![NetScaler 13.1 CLI — LAS 模式](images/adc-007.png)
+
+GUI 界面（Licensing Mode 显示为 LAS (Fixed Bandwidth)，IP: 192.168.111.207）：
+
+![NetScaler 13.1 GUI — LAS 模式](images/adc-008.png)
+
+---
+
+#### 迁移前后对比总结
+
+| 对比项 | Local 模式（迁移前） | LAS 模式（迁移后） |
+|--------|---------------------|-------------------|
+| Licensing mode | Local | LAS (Fixed Bandwidth) |
+| Days to LAS enforcement | 显示倒计时（如 1214 天） | 不显示（已完成迁移） |
+| Days to expiration | 显示文件许可证到期天数 | 显示 LAS 许可证到期天数 |
+| GUI 警告横幅 | 红色 "Transition to LAS by April 15" | 无警告 |
+| LAS Offline Activation 按钮 | 不显示 | 显示 |
+| License 来源 | 本地 .lic 文件 | Citrix Cloud LAS |
+
 ---
 
 ## 七、宽限期与容错机制
